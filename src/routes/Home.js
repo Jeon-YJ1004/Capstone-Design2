@@ -1,13 +1,19 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import celestialsJson from "../assets/celestials.json";
-import Header from "../components/Header";
+import { Link } from "react-router-dom";
+
+import Headers from "../components/header/Header";
+// import CelSlide from "../components/Slide";
+
 function Home() {
-  const celestials = celestialsJson.celestial;
   return (
     <div>
-      <Header />
+      <h1>Size of Celestial</h1>
+
+      <button>
+        <Link to="celestial/Earth">click me</Link>
+      </button>
     </div>
   );
 }
+
 export default Home;

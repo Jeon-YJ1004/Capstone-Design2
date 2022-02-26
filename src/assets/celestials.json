@@ -1,9 +1,0 @@
-{
-  "celestial": [
-    {
-      "name": "Earth",
-      "radius": 6371,
-      "imageLink": "../assets/earth.png"
-    }
-  ]
-}
