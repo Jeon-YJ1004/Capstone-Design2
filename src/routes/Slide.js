@@ -13,23 +13,16 @@ function CelSlide() {
 
   return (
     <div>
-      <FullScreenHorizontalScroll>
-        <Headers />
-        {/* Elements that you want to display in the horizontal scroll */}
-        <div style={{ border: "10px solid black" }}>
-          <div className="slide">
-            <h4>{celestialData[0].name}</h4>
-            <img
-              key={celestialData[0].name}
-              value={celestialData[0].name}
-              src={celestialData[0].image}
-            />
-          </div>
+      <div style={{ border: "10px solid black" }}>
+        <div className="slide">
+          <h4>{celestialData[0].name}</h4>
+          <img
+            key={celestialData[0].name}
+            value={celestialData[0].name}
+            src={celestialData[0].image}
+          />
         </div>
-        <div style={{ border: "10px solid black" }}>
-          <div className="slide"></div>
-        </div>
-      </FullScreenHorizontalScroll>
+      </div>
     </div>
   );
 }
