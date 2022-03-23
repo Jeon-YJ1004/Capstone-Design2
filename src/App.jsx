@@ -3,6 +3,7 @@ import CelSlide from "./components/Slide";
 import Home from "./routes/Home";
 import DetailCel from "./routes/DetailCel";
 import Earth from "./components/three.js/Earth";
+import "./App.css";
 
 function App() {
   return (

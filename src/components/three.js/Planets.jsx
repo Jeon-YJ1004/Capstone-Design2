@@ -1,11 +1,12 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
-import { EllipseCurve, TextureLoader } from "three";
+import { BufferGeometry, EllipseCurve, TextureLoader } from "three";
 
 import * as THREE from "three";
-import { OrbitControls, Stars } from "@react-three/drei";
+import { OrbitControls, Shadow, Stars } from "@react-three/drei";
 
 import celestialJson from "../../assets/celestials";
+import { LineGeometry } from "three/examples/jsm/lines/LineGeometry";
 
 function get3dPoints(points2D) {
   let points3D = [];
@@ -28,17 +29,23 @@ export default function Planets(props) {
 
   console.log(celestialData[0]);
   const textureMap = useLoader(TextureLoader, celestialData[0].image);
-
   const planetRef = useRef();
 
-  useFrame(({ clock }) => {
+  // 자전 궤도의 기울어진 정도
+  useEffect(() => {
+    planetRef.current.rotation.z +=
+      (celestialData[0].obliquityToOrbit * Math.PI) / 180;
+  }, []);
+  // 공전 궤도
+  useFrame(() => {
     planetRef.current.rotation.y += 1 / celestialData[0].rotationPeriod;
-
     // celestialData[0].obliquityToOrbit *Math.PI/180
   });
 
   //원일점, 근일점, 이심률로 타원 궤도 계산하기
-  const Ecliptic = (aphelion, perihelion, eccentricity) => {
+  const Ecliptic = ({ aphelion, perihelion, eccentricity }) => {
+    aphelion *= orbitFactor;
+    perihelion *= orbitFactor;
     const majorAxis = aphelion + perihelion;
     const foci = majorAxis / 2 - perihelion;
     const minorAxis =
@@ -56,13 +63,47 @@ export default function Planets(props) {
       false, // aClockwise
       0 // aRotation
     );
+    //2차원 타원 궤도를 3차원 타원 좌표로 변환
     let ellipse = new THREE.CatmullRomCurve3(
       get3dPoints(curve.getPoints(orbitDetail))
+    );
+    console.log("ellipse :", ellipse);
+    let ellipsePoints = ellipse.getPoints(orbitDetail);
+    const lineGeometry = new THREE.BufferGeometry();
+    console.log(ellipsePoints);
+    // for (let i = 0; i < ellipsePoints.length; i++) {
+    //   lineGeometry.vertices.push(ellipsePoints[0]);
+    // }
+    lineGeometry.setAttribute("position", new THREE.Buffer());
+    return (
+      <mesh geometry={curve}>
+        <lineBasicMaterial color="red" />
+      </mesh>
     );
   };
   return (
     <>
-      <ambientLight color="#f6f3ea" intensity={1} />
+      <spotLight color="#f6f3ea" intensity={1} position={[1, 1, 1]} />
+      <group>
+        <mesh ref={planetRef} castShadow receiveShadow>
+          <sphereGeometry
+            args={[
+              celestialData[0].diameter / sizeFactor,
+              detailLevel,
+              detailLevel,
+            ]}
+          />
+          <sphereGeometry args={[1, 32, 32]} />
+          <meshLambertMaterial map={textureMap} />
+          <Shadow />
+        </mesh>
+        <Ecliptic
+          aphelion={celestialData[0].aphelion}
+          perihelion={celestialData[0].perihelion}
+          eccentricity={celestialData[0].orbitalEccentricity}
+        />
+      </group>
+
       <OrbitControls
         enableZoom={true}
         enablePan={true}
@@ -71,21 +112,6 @@ export default function Planets(props) {
         panSpeed={0.5}
         rotateSpeed={0.4}
       />
-      <mesh>
-        <sphereGeometry
-          args={[
-            celestialData[0].diameter / sizeFactor,
-            detailLevel,
-            detailLevel,
-          ]}
-        />
-        <sphereGeometry args={[1, 32, 32]} />
-        <meshLambertMaterial map={textureMap} />
-      </mesh>
-      {/* <Ecliptic /> */}
-      <mesh></mesh>
     </>
   );
 }
-
-// 커밋 연습중
