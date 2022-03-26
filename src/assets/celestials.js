@@ -1,31 +1,6 @@
 import React from "react";
 
 const celestialJson = [
-  // {
-  //   name: "Earth",
-  //   radius: 6371,
-  //   image: require("./img/earth.png"),
-  // },
-  // {
-  //   name: "Moon",
-  //   radius: 1737,
-  //   image: require("./img/moon.png"),
-  // },
-  // {
-  //   name: "Venus",
-  //   radius: 6051,
-  //   image: require("./img/venus.png"),
-  // },
-  // {
-  //   name: "Mars",
-  //   radius: 3389,
-  //   image: require("./img/mars.png"),
-  // },
-  // {
-  //   name: "Sun",
-  //   radius: 696340,
-  //   image: require("./img/sun.png"),
-  // },
   {
     name: "Mercury",
     image: require("./img/8k_mercury.jpg"),
@@ -72,7 +47,7 @@ const celestialJson = [
   },
   {
     name: "Earth",
-
+    image: require("./img/8k_earth_daymap.jpg"),
     mass: 5.97,
     ellipticity: 0.00335,
     diameter: 12756,
@@ -204,3 +179,5 @@ const celestialJson = [
   },
 ];
 export default celestialJson;
+
+// https://nssdc.gsfc.nasa.gov/planetary/planetfact.html 참고
