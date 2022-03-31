@@ -1,0 +1,16 @@
+$red: #e55643;
+$green: #2b9f5e;
+$yellow: #f1c83c;
+$shadow: #533d4a;
+
+.title {
+  &:nth-child(1) {
+    color: $red;
+  }
+  &:nth-child(2) {
+    color: $green;
+  }
+  &:nth-child(3) {
+    color: $yellow;
+  }
+}

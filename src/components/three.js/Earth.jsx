@@ -26,26 +26,19 @@ export default function Earth() {
 
   return (
     <>
-      <ambientLight color="#f6f3ea" intensity={1} />
-      <Stars
-        radius={300}
-        depth={60}
-        count={20000}
-        factor={7}
-        saturation={0}
-        fade={true}
-      />
-      <mesh ref={cloudsRef}>
+      <pointLight color="#f6f3ea" position={[1.5, 0, 5]} intensity={1.2} />
+
+      <mesh ref={cloudsRef} position={[0, 0, 2]}>
         <sphereGeometry args={[1.005, 32, 32]} />
         <meshPhongMaterial
           map={cloudsMap}
-          opacity={0.3}
+          opacity={0.4}
           depthWrite={true}
           transparent={true}
           side={THREE.DoubleSide}
         />
       </mesh>
-      <mesh ref={earthRef}>
+      <mesh ref={earthRef} position={[0, 0, 2]}>
         <sphereGeometry args={[1, 32, 32]} />
         <meshPhongMaterial specularMap={specularMap} />
         <meshStandardMaterial
@@ -53,14 +46,6 @@ export default function Earth() {
           normalMap={normalMap}
           metalness={0.4}
           roughness={0.7}
-        />
-        <OrbitControls
-          enableZoom={true}
-          enablePan={true}
-          enableRotate={true}
-          zoomSpeed={0.6}
-          panSpeed={0.5}
-          rotateSpeed={0.4}
         />
       </mesh>
     </>

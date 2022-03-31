@@ -2,23 +2,24 @@ import { React, useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 
 import styled from "styled-components";
-import oc from "open-color";
-import { shadow, media } from "./styleUtil";
 import celestialJson from "../../assets/celestials.js";
 
-// 상단 고정, 그림자
+// 상단 고정
 const Positioner = styled.div`
   display: flex;
   flex-direction: column;
   position: fixed;
   top: 0px;
   width: 100%;
-  ${shadow(1)}
+
+  padding: 10px;
+  margin-bottom: 10px;
+
+  height: 50px;
 `;
 
-// 흰 배경, 내용 중간 정렬
-const WhiteBackground = styled.div`
-  background: white;
+//, 내용 중간 정렬
+const BlackBackground = styled.div`
   display: flex;
   justify-content: center;
   height: auto;
@@ -26,68 +27,68 @@ const WhiteBackground = styled.div`
 
 // 해더의 내용
 const HeaderContents = styled.div`
-  width: 1200px;
-  height: 55px;
+  width: 100%;
+  height: 100px;
   display: flex;
   flex-direction: row;
   align-items: center;
 
   padding-right: 1rem;
   padding-left: 1rem;
-  ${media.wide`
-        width: 992px;
-    `}
-
-  ${media.tablet`
-        width: 100%;
-    `}
-`;
-
-// 로고
-const Logo = styled.div`
-  font-size: 1.4rem;
-  letter-spacing: 2px;
-  color: ${oc.teal[7]};
-  font-family: "Rajdhani";
-`;
-
-// 중간 여백
-const Spacer = styled.div`
-  flex-grow: 1;
 `;
 
 // 하단 그래디언트 테두리
 const GradientBorder = styled.div`
   height: 3px;
-  background: linear-gradient(to right, ${oc.teal[6]}, ${oc.cyan[5]});
+  background: linear-gradient(to right, #868e96, #495057);
 `;
 
-const Headers = ({ children }) => {
-  const [optionState, setOptionState] = useState("");
+const Headers = (props) => {
+  const [renderingSolarSystem, setRenderingSolarSystem] = useState(
+    props.solarSystem
+  );
+  const [controlDistanceState, setControlDistanceState] = useState(true);
   const onChange = (event) => {
     console.log(event.target.value);
     window.location.replace(`/celestial/${event.target.value}`);
   };
+  const onClickBtnRenderingPage = () => {
+    console.log(renderingSolarSystem);
+    if (renderingSolarSystem) {
+      console.log("click");
+      window.location.replace(`/solarSystem`);
+    } else {
+      setRenderingSolarSystem(false);
+      window.location.replace(`/slide`);
+    }
+  };
+  const onClickBtnControlDistance = () => {};
   return (
     <Positioner>
-      <WhiteBackground>
+      <BlackBackground>
         <HeaderContents>
-          <Logo>SPACE</Logo>
-          <Spacer />
+          <button type="button" onClick={onClickBtnRenderingPage}>
+            {renderingSolarSystem ? "태양계보기" : "행성보기"}
+          </button>
+
+          {renderingSolarSystem ? null : <button>비율바꾸기</button>}
           {/* {children} */}
-          <select value={optionState} onChange={onChange}>
-            <option>celestials</option>
-            {celestialJson.map((celestial) => (
-              <option key={celestial.name} value={celestial.name}>
-                {celestial.name}
-              </option>
-            ))}
-          </select>
         </HeaderContents>
-      </WhiteBackground>
+      </BlackBackground>
       <GradientBorder />
     </Positioner>
   );
 };
 
 export default Headers;
+
+{
+  /* <select value={optionState} onChange={onChange}>
+            <option>celestials</option>
+            {celestialJson.map((celestial) => (
+              <option key={celestial.name} value={celestial.name}>
+                {celestial.name}
+              </option>
+            ))}
+          </select> */
+}

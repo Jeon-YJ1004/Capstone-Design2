@@ -1,15 +1,20 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
-import { BufferGeometry, EllipseCurve, TextureLoader } from "three";
+import { TextureLoader } from "three";
 
 import * as THREE from "three";
-import { OrbitControls, Shadow, Stars } from "@react-three/drei";
+import { OrbitControls, Shadow } from "@react-three/drei";
 
 import celestialJson from "../../assets/celestials";
-import { LineGeometry } from "three/examples/jsm/lines/LineGeometry";
 import SaturnRingMap from "../../assets/img/8k_saturn_ring_alpha.png";
 
-export default function Planets(props) {
+const Planets = forwardRef((props, ref) => {
   const sizeFactor = 160; // 1
   const orbitFactor = 50; // 1000000
   const orbitDetail = 500; // how many segment compound the orbit ellipse
@@ -31,7 +36,7 @@ export default function Planets(props) {
   const [curveToFrame, setCurveToFrame] = useState();
 
   //토성일경우 고리 만들어주기
-  if (props.name === "Saaturn") {
+  if (props.name === "Saturn") {
   }
 
   function Get3dPoints(points2D) {
@@ -45,35 +50,39 @@ export default function Planets(props) {
   }
 
   useEffect(() => {
-    //행성의 원일점, 근일점, 이심률로 공전 궤도 계산하기
-    aphelion *= orbitFactor;
-    perihelion *= orbitFactor;
-    const majorAxis = aphelion + perihelion;
-    const foci = majorAxis / 2 - perihelion;
-    const minorAxis =
-      2 * (foci / eccentricity) * Math.sqrt(1 - Math.pow(eccentricity, 2));
-    const radiusX = majorAxis / 2;
-    const radiusY = minorAxis / 2;
+    if (props.doOrbit) {
+      //행성의 원일점, 근일점, 이심률로 공전 궤도 계산하기
+      aphelion *= orbitFactor;
+      perihelion *= orbitFactor;
+      const majorAxis = aphelion + perihelion;
+      const foci = majorAxis / 2 - perihelion;
+      const minorAxis =
+        2 * (foci / eccentricity) * Math.sqrt(1 - Math.pow(eccentricity, 2));
+      const radiusX = majorAxis / 2;
+      const radiusY = minorAxis / 2;
 
-    let curve = new THREE.EllipseCurve(
-      0,
-      0, // aX, aY
-      radiusX, // xRadius
-      radiusY, // yRadius
-      0,
-      2 * Math.PI, // aStartAngle, aEndAngle
-      false, // aClockwise
-      0 // aRotation
-    );
-    // 2차원 타원 궤도를 3차원 타원 좌표로 변환
-    let ellipse = new THREE.CatmullRomCurve3(
-      Get3dPoints(curve.getPoints(orbitDetail))
-    );
-    console.log("ellipse", ellipse);
-    let ellipsePoints = ellipse.getPoints(orbitDetail);
-    const lineGeometry = new THREE.BufferGeometry().setFromPoints(
-      ellipsePoints
-    );
+      let curve = new THREE.EllipseCurve(
+        0,
+        0, // aX, aY
+        radiusX, // xRadius
+        radiusY, // yRadius
+        0,
+        2 * Math.PI, // aStartAngle, aEndAngle
+        false, // aClockwise
+        0 // aRotation
+      );
+      // 2차원 타원 궤도를 3차원 타원 좌표로 변환
+      let ellipse = new THREE.CatmullRomCurve3(
+        Get3dPoints(curve.getPoints(orbitDetail))
+      );
+      console.log("ellipse", ellipse);
+      let ellipsePoints = ellipse.getPoints(orbitDetail);
+      const lineGeometry = new THREE.BufferGeometry().setFromPoints(
+        ellipsePoints
+      );
+      setCurveToFrame(ellipse);
+    }
+
     // 자전 궤도의 기울어진 정도
     planetRef.current.rotation.z +=
       (celestialData[0].obliquityToOrbit * Math.PI) / 180;
@@ -81,7 +90,6 @@ export default function Planets(props) {
     groupRef.current.rotation.x = Math.PI / 2;
     groupRef.current.rotation.y =
       (celestialData[0].orbitalInclination * Math.PI) / 180;
-    setCurveToFrame(ellipse);
 
     // 공전 궤도 선
     // <line geometry={lineGeometry} name="orbit">
@@ -93,8 +101,7 @@ export default function Planets(props) {
   useFrame(() => {
     //자전
     planetRef.current.rotation.y += 1 / celestialData[0].rotationPeriod;
-
-    if (counter <= 1 && !(curveToFrame === undefined)) {
+    if (props.doOrbit && counter <= 1 && !(curveToFrame === undefined)) {
       //공전
 
       planetRef.current.position.copy(curveToFrame.getPoint(counter));
@@ -106,9 +113,14 @@ export default function Planets(props) {
     } else {
       setCounter(0);
     }
+
     return;
   });
-
+  useImperativeHandle(ref, () => ({
+    getPlanetPosition() {
+      return planetRef.current.poposition.copy(curveToFrame.getPoint(counter));
+    },
+  }));
   return (
     <>
       <ambientLight color="#f6f3ea" intensity={0.04} />
@@ -125,15 +137,7 @@ export default function Planets(props) {
           <Shadow />
         </mesh>
       </group>
-
-      <OrbitControls
-        enableZoom={true}
-        enablePan={true}
-        enableRotate={true}
-        zoomSpeed={1}
-        panSpeed={0.5}
-        rotateSpeed={0.4}
-      />
     </>
   );
-}
+});
+export default Planets;
