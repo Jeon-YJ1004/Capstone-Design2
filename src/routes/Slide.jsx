@@ -23,7 +23,6 @@ import Loading from "../components/Loading.jsx";
 
 import Planets from "../components/three.js/Planets";
 import DetailCel from "../components/DetailCel";
-
 function CelSlide() {
   const [slideProgress, setSlideProgress] = useState(0);
   const [slideIndex, setSlideIndex] = useState(0);
@@ -31,7 +30,7 @@ function CelSlide() {
   const [isRunning, setIsRunning] = useState(true);
   const sliderRef = useRef();
 
-  const [cameraX, setCameraX] = useState(-500);
+  const [cameraX, setCameraX] = useState(-1000);
   const [cameraZ, setCameraZ] = useState(100);
   const [targetZ, setTargetZ] = useState(100);
   const [updateCount, setUpdateCount] = useState(0);
@@ -110,18 +109,20 @@ function CelSlide() {
     // )[0].diameter;
     // let currentSize = celestialJson.filter((cel) => cel.index === slideIndex)[0]
     //   .diameter;
-    setTargetZ(celestialJson.filter((cel) => cel.index === slideIndex)[0].zPos);
+    setTargetZ(
+      celestialJson.filter((cel) => cel.index === slideIndex)[0]
+        .distanceFromSun * 10
+    );
     // setCameraX(0 - cameraZ);
     setCameraZ(
-      celestialJson.filter((cel) => cel.index === slideIndex)[0].cameraZ
+      celestialJson.filter((cel) => cel.index === slideIndex)[0]
+        .distanceFromSun * 10
     );
     console.log(slideIndex, cameraX, cameraZ, targetZ);
   }, [slideIndex]);
   return (
     <div onWheel={mouseWheel}>
-      <StyledHeader>
-        <Headers solarSystem={true} />
-      </StyledHeader>
+      <Headers solarSystem={true} />
 
       <StyledSlider ref={sliderRef} {...settings}>
         <CanvasContainer>
@@ -153,20 +154,13 @@ function CelSlide() {
                   key={cel.name}
                   name={cel.name}
                   doOrbit={false}
-                  position={[0, 0, cel.zPos]}
+                  position={[0, 0, cel.distanceFromSun * 10]}
+                  planetRatio={true}
                 />
               ))}
             </Suspense>
 
-            <OrbitControls
-              enableZoom={true}
-              enablePan={true}
-              enableRotate={true}
-              zoomSpeed={0.6}
-              panSpeed={0.5}
-              rotateSpeed={0.4}
-              target={[0, 0, targetZ]}
-            />
+            <OrbitControls target={[0, 0, targetZ]} />
           </Canvas>
         </CanvasContainer>
       </StyledSlider>
@@ -193,7 +187,14 @@ function CelSlide() {
 }
 
 export default CelSlide;
-export const StyledSlider = styled(Slider)`
+const CanvasContainer = styled.div`
+  width: 100%;
+  height: 90vh;
+  margin: 0;
+  top: 100px;
+`;
+
+const StyledSlider = styled(Slider)`
   height: 100%; //슬라이드 컨테이너 영역
   display: flex;
   .slick-list {
@@ -219,10 +220,3 @@ export const StyledSlider = styled(Slider)`
     width: 100%;
   }
 `;
-
-export const CanvasContainer = styled.div`
-  width: 100%;
-  height: 100vh;
-  margin: 0;
-`;
-const StyledHeader = styled.div``;

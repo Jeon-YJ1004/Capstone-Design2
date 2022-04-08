@@ -17,7 +17,7 @@ import SaturnRingMap from "../../assets/img/8k_saturn_ring_alpha.png";
 import DetailCel from "../DetailCel";
 
 const Planets = (props) => {
-  const sizeFactor = 160; //diameter/sizeFactor
+  const [sizeFactor, setSizeFactor] = useState(160); //diameter/sizeFactor
   const orbitFactor = 50; // 1000000
   const orbitDetail = 500; // how many segment compound the orbit ellipse
   const detailLevel = 50; // sphere geometry detail
@@ -60,7 +60,9 @@ const Planets = (props) => {
 
     return points3D;
   }
-
+  useEffect(() => {
+    !props.planetRatio && setSizeFactor(celestialData[0].sizeFactor);
+  }, [props.planetRatio]);
   useEffect(() => {
     if (props.doOrbit) {
       //행성의 원일점, 근일점, 이심률로 공전 궤도 계산하기
@@ -95,6 +97,7 @@ const Planets = (props) => {
       setCurveToFrame(ellipse);
       // 공전 궤도 선
       // <line geometry={lineGeometry} name="orbit">
+
       //   {console.log("return line")}
       //   <lineBasicMaterial attach="material" color="white" linewidth={100} />
       // </line>;
