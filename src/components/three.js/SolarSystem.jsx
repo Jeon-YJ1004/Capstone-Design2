@@ -2,14 +2,13 @@ import React, { useRef, Suspense } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
 import styled from "styled-components";
-import * as THREE from "three";
+
 import { OrbitControls, Stars } from "@react-three/drei";
-import { Canvas, useThree } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import Loading from "../Loading";
 import Planets from "./Planets";
 import sunImage from "../../assets/img/8k_sun.jpg";
 import celestialJson from "../../assets/celestials";
-import Earth from "./Earth";
 import Headers from "../header/Header";
 const CanvasContainer = styled.div`
   width: 100%;
@@ -18,7 +17,7 @@ const CanvasContainer = styled.div`
 `;
 
 export default function SolarSystem() {
-  const sunSizeFactor = 160;
+  const sunSizeFactor = 400;
   const sunRadius = 695700;
   const sunRotationTime = 609.12;
 
@@ -31,16 +30,16 @@ export default function SolarSystem() {
   return (
     <>
       <Headers solarSystem={false} />
-      <Suspense fallback={null}>
-        <CanvasContainer>
-          <Canvas
-            camera={{
-              position: [0, 0, 40000],
-              fov: 45,
-              near: 1,
-              far: 1000000,
-            }}
-          >
+      <CanvasContainer>
+        <Canvas
+          camera={{
+            position: [0, 0, 40000],
+            fov: 45,
+            near: 1,
+            far: 1000000,
+          }}
+        >
+          <Suspense fallback={<Loading />}>
             <Stars
               radius={100000}
               depth={60}
@@ -77,9 +76,9 @@ export default function SolarSystem() {
               panSpeed={0.5}
               rotateSpeed={0.4}
             />
-          </Canvas>
-        </CanvasContainer>{" "}
-      </Suspense>
+          </Suspense>
+        </Canvas>
+      </CanvasContainer>{" "}
     </>
   );
 }

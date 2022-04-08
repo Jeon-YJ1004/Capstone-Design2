@@ -1,21 +1,13 @@
-import styled from "styled-components";
-import react from "react";
+import { React } from "react";
 
-export const StyledDiv = styled.div`
-  width: 100%;
-  height: calc(100vh - 100px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 300;
+import { useProgress, Html } from "@react-three/drei";
 
-  color: rgb(37, 34, 34);
-`;
 function Loading() {
+  const { active, progress, errors, item, loaded, total } = useProgress();
   return (
-    <StyledDiv>
-      <span>Loading...</span>
-    </StyledDiv>
+    <Html as="div" center style={{ color: "white" }}>
+      {progress} % loaded
+    </Html>
   );
 }
 

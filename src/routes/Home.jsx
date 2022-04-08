@@ -10,8 +10,57 @@ import styled from "styled-components";
 import Earth from "../components/three.js/Earth";
 import { TextAnimation } from "../components/Animaition";
 import "./Home.scss";
+import Loading from "../components/Loading";
 
 // const plugin = CSSPlugin;
+
+function Home() {
+  let textRef = useRef(null);
+  const [loading, setLoading] = useState(true);
+
+  const onClick = () => {
+    window.location.replace(`/slide`);
+  };
+  useEffect(() => {
+    // TextAnimation(textRef);
+    {
+      setLoading(false);
+    }
+  }, []);
+  return (
+    <div>
+      <>
+        <TextContainer ref={(el) => (textRef = el)}>
+          <StyledH1>
+            <StyledSpan className="title">3D</StyledSpan>
+            <StyledSpan className="title">태양계가</StyledSpan>
+            <StyledSpan className="title">보고싶다면?</StyledSpan>
+          </StyledH1>
+          <StyledButton onClick={onClick}>Click ME!</StyledButton>
+        </TextContainer>
+
+        <CanvasContainer>
+          <Canvas>
+            <Suspense fallback={<Loading />}>
+              <Stars
+                radius={300}
+                depth={60}
+                count={20000}
+                factor={7}
+                saturation={0}
+                fade={true}
+              />
+              <Earth />
+            </Suspense>
+          </Canvas>
+        </CanvasContainer>
+      </>
+    </div>
+  );
+}
+
+export default Home;
+
 const CanvasContainer = styled.div`
   width: 100%;
   height: 100vh;s
@@ -56,43 +105,3 @@ const StyledButton = styled.button`
   text-transform: uppercase;
   cursor: pointer;
 `;
-
-function Home() {
-  let textRef = useRef(null);
-  const onClick = () => {
-    window.location.replace(`/slide`);
-  };
-  // useEffect(() => {
-  //   TextAnimation(textRef);
-  // }, []);
-  return (
-    <div>
-      <TextContainer ref={(el) => (textRef = el)}>
-        <StyledH1>
-          <StyledSpan className="title">3D</StyledSpan>
-          <StyledSpan className="title">태양계가</StyledSpan>
-          <StyledSpan className="title">보고싶다면?</StyledSpan>
-        </StyledH1>
-        <StyledButton onClick={onClick}>Click ME!</StyledButton>
-      </TextContainer>
-
-      <CanvasContainer>
-        <Canvas>
-          <Suspense fallback={null}>
-            <Stars
-              radius={300}
-              depth={60}
-              count={20000}
-              factor={7}
-              saturation={0}
-              fade={true}
-            />
-            <Earth />
-          </Suspense>
-        </Canvas>
-      </CanvasContainer>
-    </div>
-  );
-}
-
-export default Home;

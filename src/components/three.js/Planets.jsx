@@ -5,17 +5,19 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from "react";
+
 import { useFrame, useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
 
 import * as THREE from "three";
-import { OrbitControls, Shadow } from "@react-three/drei";
+import { Html, OrbitControls, Shadow } from "@react-three/drei";
 
 import celestialJson from "../../assets/celestials";
 import SaturnRingMap from "../../assets/img/8k_saturn_ring_alpha.png";
+import DetailCel from "../DetailCel";
 
-const Planets = forwardRef((props, ref) => {
-  const sizeFactor = 160; // 1
+const Planets = (props) => {
+  const sizeFactor = 160; //diameter/sizeFactor
   const orbitFactor = 50; // 1000000
   const orbitDetail = 500; // how many segment compound the orbit ellipse
   const detailLevel = 50; // sphere geometry detail
@@ -32,12 +34,22 @@ const Planets = forwardRef((props, ref) => {
   ]);
   const planetRef = useRef();
   const groupRef = useRef();
+  const ringRef = useRef();
+
   const [counter, setCounter] = useState(0);
   const [curveToFrame, setCurveToFrame] = useState();
 
-  //토성일경우 고리 만들어주기
-  if (props.name === "Saturn") {
-  }
+  const [modalState, setModalState] = useState(false);
+  const modalRef = useRef(null);
+  const openModal = () => {
+    modalRef.current?.show();
+    setModalState(true);
+  };
+
+  const closeModal = (event) => {
+    event.preventDefault();
+    setModalState(false);
+  };
 
   function Get3dPoints(points2D) {
     let points3D = [];
@@ -81,6 +93,11 @@ const Planets = forwardRef((props, ref) => {
         ellipsePoints
       );
       setCurveToFrame(ellipse);
+      // 공전 궤도 선
+      // <line geometry={lineGeometry} name="orbit">
+      //   {console.log("return line")}
+      //   <lineBasicMaterial attach="material" color="white" linewidth={100} />
+      // </line>;
     }
 
     // 자전 궤도의 기울어진 정도
@@ -90,12 +107,9 @@ const Planets = forwardRef((props, ref) => {
     groupRef.current.rotation.x = Math.PI / 2;
     groupRef.current.rotation.y =
       (celestialData[0].orbitalInclination * Math.PI) / 180;
-
-    // 공전 궤도 선
-    // <line geometry={lineGeometry} name="orbit">
-    //   {console.log("return line")}
-    //   <lineBasicMaterial attach="material" color="white" linewidth={100} />
-    // </line>;
+    // ringRef.current.rotation.z +=
+    //   (celestialData[0].obliquityToOrbit * Math.PI) / 180;
+    // ringRef.current.rotation.x = -(Math.PI / 2);
   }, []);
   // 공전 궤도
   useFrame(() => {
@@ -105,7 +119,6 @@ const Planets = forwardRef((props, ref) => {
       //공전
 
       planetRef.current.position.copy(curveToFrame.getPoint(counter));
-      // console.log(planetRef.current.position.y, "copy이후 y");
 
       setCounter(
         (current) => current + celestialData[0].orbitalVelocity / speedFactor
@@ -116,16 +129,19 @@ const Planets = forwardRef((props, ref) => {
 
     return;
   });
-  useImperativeHandle(ref, () => ({
-    getPlanetPosition() {
-      return planetRef.current.poposition.copy(curveToFrame.getPoint(counter));
-    },
-  }));
+
   return (
     <>
+      {modalState && (
+        <DetailCel
+          name={celestialData[0].name}
+          state={modalState}
+          closeModal={closeModal}
+        />
+      )}
       <ambientLight color="#f6f3ea" intensity={0.04} />
-      <group castShadow receiveShadow ref={groupRef}>
-        <mesh ref={planetRef}>
+      <group castShadow receiveShadow ref={groupRef} position={props.position}>
+        <mesh ref={planetRef} onClick={openModal}>
           <sphereGeometry
             args={[
               celestialData[0].diameter / sizeFactor,
@@ -135,9 +151,25 @@ const Planets = forwardRef((props, ref) => {
           />
           <meshLambertMaterial map={textureMap} />
           <Shadow />
+          {props.doOrbit && (
+            <Html as="div" style={{ color: "white" }} onClick={openModal}>
+              {celestialData[0].name}
+            </Html>
+          )}
         </mesh>
+        {props.name === "Saturn" ? (
+          <mesh ref={ringRef}>
+            <ringGeometry
+              innerRadius={900}
+              outerRadius={1500}
+              thetaSegments={180}
+              phiSegments={80}
+            />
+            <meshBasicMaterial map={ringMap} />
+          </mesh>
+        ) : null}
       </group>
     </>
   );
-});
+};
 export default Planets;

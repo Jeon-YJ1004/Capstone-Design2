@@ -3,7 +3,8 @@ import React from "react";
 const celestialJson = [
   {
     index: 0,
-    zoom: 64,
+    zPos: 100,
+    cameraZ: 200,
     name: "Mercury",
     image: require("./img/8k_mercury.jpg"),
     mass: 0.33,
@@ -27,7 +28,8 @@ const celestialJson = [
   },
   {
     index: 1,
-    zoom: 64,
+    zPos: 250,
+    cameraZ: 550,
     name: "Venus",
     image: require("./img/8k_venus_surface.jpg"),
     mass: 4.87,
@@ -51,7 +53,8 @@ const celestialJson = [
   },
   {
     index: 2,
-    zoom: 64,
+    zPos: 500,
+    cameraZ: 800,
     name: "Earth",
     image: require("./img/8k_earth_daymap.jpg"),
     mass: 5.97,
@@ -75,7 +78,8 @@ const celestialJson = [
   },
   {
     index: 3,
-    zoom: 96,
+    zPos: 800,
+    cameraZ: 970,
     name: "Mars",
     image: require("./img/8k_mars.jpg"),
     mass: 0.642,
@@ -99,7 +103,8 @@ const celestialJson = [
   },
   {
     index: 4,
-    zoom: 32,
+    zPos: 2000,
+    cameraZ: 5000,
     name: "Jupiter",
     image: require("./img/8k_jupiter.jpg"),
     mass: 1898,
@@ -118,12 +123,13 @@ const celestialJson = [
     orbitalInclination: 1.3,
     orbitalEccentricity: 0.049,
     obliquityToOrbit: 3.1,
-    meanTemperature: -110,
+    meanTemperature: -120,
     numberOfSatellites: 67,
   },
   {
     index: 5,
-    zoom: 64,
+    zPos: 4500,
+    cameraZ: 7000,
     name: "Saturn",
     image: require("./img/8k_saturn.jpg"),
     mass: 568,
@@ -147,7 +153,8 @@ const celestialJson = [
   },
   {
     index: 6,
-    zoom: 168,
+    zPos: 7000,
+    cameraZ: 8100,
     name: "Uranus",
     image: require("./img/2k_uranus.jpg"),
     mass: 86.8,
@@ -171,7 +178,8 @@ const celestialJson = [
   },
   {
     index: 7,
-    zoom: 256,
+    zPos: 8000,
+    cameraZ: 9000,
     name: "Neptune",
     image: require("./img/2k_neptune.jpg"),
     mass: 102,
