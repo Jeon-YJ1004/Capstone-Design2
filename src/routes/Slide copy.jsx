@@ -25,18 +25,28 @@ import Planets from "../components/three.js/Planets";
 import Roket from "../assets/img/rocket-solid.svg";
 import createCamera from "../components/three.js/createCamera";
 
+function animate(callback) {
+  function loop(time) {
+    callback(time);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+}
+
 export default function CelSlide() {
   const [slideProgress, setSlideProgress] = useState(0);
   const [slideIndex, setSlideIndex] = useState(0);
   const [slidePrevIndex, setSlidePrevIndex] = useState(0);
   const [isRunning, setIsRunning] = useState(true);
   const sliderRef = useRef();
+
+  // const [cameraX, setCameraX] = useState(200);
+  // const [cameraZ, setCameraZ] = useState(200);
+  const [targetZ, setTargetZ] = useState(579);
   const [updateCount, setUpdateCount] = useState(0);
   const [isScroll, setIsScroll] = useState(false);
+  const camera = createCamera();
 
-  const [cameraX, setCameraX] = useState(200);
-  const [cameraZ, setCameraZ] = useState(200);
-  const [targetZ, setTargetZ] = useState(579);
   const cameraRef = useRef();
 
   const settings = {
@@ -120,12 +130,15 @@ export default function CelSlide() {
       celestialJson.filter((cel) => cel.index === slideIndex)[0]
         .distanceFromSun * 10
     );
-    setCameraX(
-      celestialJson.filter((cel) => cel.index === slideIndex)[0].diameter /
-        32.53
+    console.log(slideIndex, targetZ);
+    console.log(camera.position);
+    camera.position.set(
+      579,
+      0,
+      celestialJson.filter((cel) => cel.index === slideIndex)[0]
+        .distanceFromSun * 10
     );
-    setCameraZ(targetZ);
-  }, [slideIndex]);
+  }, [slideIndex, targetZ]);
 
   return (
     <StyledDiv onWheel={mouseWheel}>
@@ -134,7 +147,7 @@ export default function CelSlide() {
       <StyledSlider ref={sliderRef} {...settings}>
         <CanvasContainer>
           <Canvas concurrent>
-            <PerspectiveCamera
+            {/* <PerspectiveCamera
               makeDefault
               ref={cameraRef}
               position={[cameraX, 0, targetZ]}
@@ -142,10 +155,10 @@ export default function CelSlide() {
               near={1}
               far={100000}
               onUpdate={(self) => self.updateProjectionMatrix()}
-            />
+            /> */}
 
             <Suspense fallback={<Loader />}>
-              <pointLight intensity={1} position={[0, 0, 0]} />
+              <pointLight intensity={0.4} position={[1000, 0, 1000]} />
 
               {celestialJson.map((cel) => (
                 <Planets
@@ -153,13 +166,13 @@ export default function CelSlide() {
                   name={cel.name}
                   doOrbit={false}
                   position={[0, 0, cel.distanceFromSun * 10]}
-                  planetRatioReal={true}
+                  planetRatio={true}
                   closeModal={isScroll}
                 />
               ))}
             </Suspense>
 
-            <OrbitControls target={[0, 0, targetZ]} />
+            <OrbitControls />
           </Canvas>
           <ProgressBar>
             <Input
@@ -169,7 +182,7 @@ export default function CelSlide() {
               min={0}
               max={celestialJson.length}
             />
-
+            {/* <FontAwesomeIcon icon={faRocket} /> */}
             <StyledBtn
               onClick={() => {
                 setIsRunning(!isRunning);
@@ -189,27 +202,28 @@ export default function CelSlide() {
 }
 
 const StyledDiv = styled.div`
-  z-index: 2;
   display: flex;
   margin: 0;
   flex-wrap: wrap;
   width: 100%;
   height: 100vh;
+  // flex-direction: column; /*수직 정렬*/
+  // align-items: center;
+  // justify-content: center;
   background-color: black;
 `;
 const CanvasContainer = styled.div`
   width: 100%;
-  height: 93vh;
+  height: 100vh;
   margin: 0;
-  z-index: -1;
-  transform: none;
 `;
 
 const StyledSlider = styled(Slider)`
   height: 100vh; //슬라이드 컨테이너 영역
-  width: 100%;
+  width:100%;
   display: flex;
-
+  position:absolute
+  top: 100px;
   .slick-list {
     //슬라이드 스크린
     width: 100%;
@@ -220,6 +234,7 @@ const StyledSlider = styled(Slider)`
 
   .slick-slide div {
     //슬라이더  컨텐츠
+   
   }
 
   // .slick-dots {
@@ -235,6 +250,7 @@ const StyledSlider = styled(Slider)`
 const ProgressBar = styled.div`
   z-index: 2;
   align-items: center;
+  position: center;
   align-items: center;
   justify-content: center;
   display: flex;
@@ -247,11 +263,12 @@ const Input = styled.input`
   background: none; 
   border 2px solid #ADFF2F;
   border-radius: 500px;
+
   ::-webkit-slider-thumb {
     -webkit-appearance: none; /* Override default look */
     appearance: none;
-    width: 30px; /* Set a specific slider handle width */
-    height: 30px; /* Slider handle height */
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
     background: url(${Roket});
     cursor: pointer; /* Cursor on hover */
 
@@ -266,9 +283,5 @@ const StyledBtn = styled.button`
   .svg-inline--fa {
     display: var(--fa-display, inline-block);
     height: 30px;
-  }
-  &:hover {
-    color: #adff2f;
-    cursor: pointer;
   }
 `;

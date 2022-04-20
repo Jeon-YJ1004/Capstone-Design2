@@ -1,4 +1,4 @@
-import React, { useRef, Suspense, useState } from "react";
+import React, { useRef, Suspense, useState, useEffect } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
 import styled from "styled-components";
@@ -12,27 +12,39 @@ import celestialJson from "../../assets/celestials";
 import Headers from "../header/Header";
 
 export default function SolarSystem(props) {
-  const isRatioReal = useState(props.ratio);
+  const [isRatioReal, setIsRatioReal] = useState(true);
+  const [cameraZ, setCameraZ] = useState(400000);
+  const [cameraY, setCameraY] = useState(0);
+  useEffect(() => {
+    if (isRatioReal) {
+      setCameraZ(40000);
+      setCameraY(10000);
+    }
+  }, [isRatioReal]);
 
   return (
     <>
-      <Headers solarSystem={false} />
+      <Headers
+        solarSystem={false}
+        setIsRatioReal={setIsRatioReal}
+        isRatioReal={isRatioReal}
+      />
       <Suspense fallback={null}>
         <CanvasContainer>
           <Canvas
             camera={{
-              position: [0, 0, 40000],
-              fov: 45,
+              position: [0, cameraY, cameraZ],
+              fov: 55,
               near: 1,
               far: 1000000,
             }}
           >
             <Suspense fallback={<Loading />}>
               <Stars
-                radius={100000}
-                depth={60}
-                count={20000}
-                factor={7}
+                radius={280000}
+                depth={0}
+                count={4000}
+                factor={10}
                 saturation={0}
                 fade={true}
               />
@@ -42,20 +54,20 @@ export default function SolarSystem(props) {
                 power={7 * Math.PI}
                 position={[0, 0, 0]}
               />
-              <Solar sunRatio={isRatioReal} />
+              <Solar sunRatioReal={!isRatioReal} />
               {celestialJson.map((planet) => {
                 return (
                   <Planets
                     key={planet.name}
                     name={planet.name}
                     doOrbit={true}
-                    planetRatio={isRatioReal}
+                    planetRatioReal={!isRatioReal}
                   />
                 );
               })}
               <OrbitControls
                 enableZoom={true}
-                maxZoom={3}
+                maxZoom={2}
                 enablePan={true}
                 enableRotate={true}
                 zoomSpeed={0.6}
@@ -71,7 +83,7 @@ export default function SolarSystem(props) {
 }
 const CanvasContainer = styled.div`
   width: 100%;
-  height: 90vh;
+  height: 100vh;
   margin: 0;
   top: 100px;
 `;

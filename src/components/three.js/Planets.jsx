@@ -1,32 +1,30 @@
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 
 import { useFrame, useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
 
 import * as THREE from "three";
-import { Html, OrbitControls, Shadow } from "@react-three/drei";
+import { Html, OrbitControls, Shadow, Stars } from "@react-three/drei";
 
 import celestialJson from "../../assets/celestials";
 import SaturnRingMap from "../../assets/img/8k_saturn_ring_alpha.png";
-import DetailCel from "../DetailCel";
+import DetailCel from "./DetailCel";
 
 const Planets = (props) => {
-  const [sizeFactor, setSizeFactor] = useState(160); //diameter/sizeFactor
-  const orbitFactor = 50; // 1000000
+  const celestialData = celestialJson.filter((cel) => cel.name === props.name);
+
   const orbitDetail = 500; // how many segment compound the orbit ellipse
   const detailLevel = 50; // sphere geometry detail
-  const speedFactor = 20000; // divide real speed
 
-  const celestialData = celestialJson.filter((cel) => cel.name === props.name);
-  let aphelion = celestialData[0].aphelion;
-  let perihelion = celestialData[0].perihelion;
-  let eccentricity = celestialData[0].orbitalEccentricity;
+  const [speedFactor, setSpeedFactor] = useState(
+    props.planetRatioReal ? 15000 : 30000
+  ); // divide real speed
+  const [sizeFactor, setSizeFactor] = useState(
+    props.planetRatioReal ? 160 : celestialData[0].sizeFactor
+  ); //diameter/sizeFactor
+  const [orbitFactor, setOrbitFactor] = useState(
+    props.planetRatioReal ? 90 : celestialData[0].orbitFactor
+  ); // 1000000
 
   const [textureMap, ringMap] = useLoader(TextureLoader, [
     celestialData[0].image,
@@ -47,7 +45,8 @@ const Planets = (props) => {
   };
 
   const closeModal = (event) => {
-    event.preventDefault();
+    // event.preventDefault();
+    console.log("close");
     setModalState(false);
   };
 
@@ -60,11 +59,25 @@ const Planets = (props) => {
 
     return points3D;
   }
+
   useEffect(() => {
-    !props.planetRatio && setSizeFactor(celestialData[0].sizeFactor);
-  }, [props.planetRatio]);
+    setModalState(false);
+  }, [props.closeModal]);
   useEffect(() => {
     if (props.doOrbit) {
+      if (props.planetRatioReal) {
+        setSpeedFactor(15000);
+        setSizeFactor(160);
+        setOrbitFactor(90);
+      } else {
+        setSpeedFactor(30000);
+        setSizeFactor(celestialData[0].sizeFactor);
+        setOrbitFactor(celestialData[0].orbitFactor);
+      }
+      let aphelion = celestialData[0].aphelion;
+      let perihelion = celestialData[0].perihelion;
+      let eccentricity = celestialData[0].orbitalEccentricity;
+
       //행성의 원일점, 근일점, 이심률로 공전 궤도 계산하기
       aphelion *= orbitFactor;
       perihelion *= orbitFactor;
@@ -113,7 +126,7 @@ const Planets = (props) => {
     // ringRef.current.rotation.z +=
     //   (celestialData[0].obliquityToOrbit * Math.PI) / 180;
     // ringRef.current.rotation.x = -(Math.PI / 2);
-  }, []);
+  }, [props.planetRatioReal, props.doOrbit]);
   // 공전 궤도
   useFrame(() => {
     //자전
@@ -140,6 +153,7 @@ const Planets = (props) => {
           name={celestialData[0].name}
           state={modalState}
           closeModal={closeModal}
+          position={props.position}
         />
       )}
       <ambientLight color="#f6f3ea" intensity={0.04} />
@@ -160,17 +174,29 @@ const Planets = (props) => {
             </Html>
           )}
         </mesh>
-        {props.name === "Saturn" ? (
+        {/* {props.name === "Saturn" && (
           <mesh ref={ringRef}>
-            <ringGeometry
+            <ringBufferGeometry
               innerRadius={900}
               outerRadius={1500}
               thetaSegments={180}
               phiSegments={80}
             />
+            {console.log("ring")}
             <meshBasicMaterial map={ringMap} />
           </mesh>
-        ) : null}
+        )} */}
+
+        {!props.doOrbit && (
+          <Stars
+            radius={6000}
+            depth={50}
+            count={800}
+            factor={6}
+            saturation={0}
+            fade={true}
+          />
+        )}
       </group>
     </>
   );

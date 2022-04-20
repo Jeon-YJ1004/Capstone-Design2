@@ -48,6 +48,16 @@ export default function Earth() {
           roughness={0.7}
         />
       </mesh>
+      <mesh position={[0, 0, 2]}>
+        <ringBufferGeometry
+          innerRadius={900}
+          outerRadius={1500}
+          thetaSegments={180}
+          phiSegments={80}
+        />
+        {console.log("ring")}
+        <meshBasicMaterial />
+      </mesh>
     </>
   );
 }

@@ -10,29 +10,24 @@ const Headers = (props) => {
   const [renderingSolarSystem, setRenderingSolarSystem] = useState(
     props.solarSystem
   );
-  const [controlDistanceState, setControlDistanceState] = useState(true);
+  // const [controlDistanceState, setControlDistanceState] = useState(true);
 
   const onClickBtnRenderingPage = () => {
     console.log(renderingSolarSystem);
     if (renderingSolarSystem) {
-      console.log("click");
-      <Suspense fallback={null}>
-        window.location.replace(`/solarSystem`);
-      </Suspense>;
+      window.location.replace(`/solarSystem`);
     } else {
       setRenderingSolarSystem(false);
-      <Suspense fallback={null}>window.location.replace(`/slide`);</Suspense>;
+      window.location.replace(`/slide`);
     }
   };
 
-  const onClickBtnControlDistance = () => {
-    // if (controlDistanceState) {
-    //   <SolarSystem ratio={true} />;
-    //   setControlDistanceState(false);
-    // } else {
-    //   <SolarSystem ratio={false} />;
-    //   setControlDistanceState(true);
-    // }
+  const onClickBtnControlRatio = () => {
+    if (props.isRatioReal) {
+      props.setIsRatioReal(false);
+    } else {
+      props.setIsRatioReal(true);
+    }
   };
   return (
     <Positioner>
@@ -41,21 +36,21 @@ const Headers = (props) => {
           <StyledBtn type="button" onClick={onClickBtnRenderingPage}>
             <TopSpan>change screen</TopSpan>
             <BottomSpan>
-              {renderingSolarSystem ? "태양계보기" : "행성보기"}
+              {renderingSolarSystem ? "SolarSystem" : "Planets"}
             </BottomSpan>
           </StyledBtn>
 
           {renderingSolarSystem ? null : (
-            <StyledBtn onClick={onClickBtnControlDistance}>
+            <StyledBtn onClick={onClickBtnControlRatio}>
               <TopSpan>change Ratio</TopSpan>
               <BottomSpan>
-                {controlDistanceState ? "Real" : "Overstate"}
+                {props.isRatioReal ? "Real" : "Overstate"}
               </BottomSpan>
             </StyledBtn>
           )}
         </HeaderContents>
       </BlackBackground>
-      <GradientBorder />
+      {/* <GradientBorder /> */}
     </Positioner>
   );
 };
@@ -64,23 +59,20 @@ export default Headers;
 
 // 상단 고정
 const Positioner = styled.div`
-  display: flex;
   flex-direction: column;
   position: fixed;
   top: 0px;
   width: 100%;
-
+  z-index: 2;
   padding: 10px;
   margin-bottom: 10px;
-
-  height: 50px;
 `;
 
 //, 내용 중간 정렬
 const BlackBackground = styled.div`
-  display: flex;
-  justify-content: center;
-  height: auto;
+  // display: flex;
+  // justify-content: center;
+  // height: auto;
 `;
 
 // 해더의 내용
@@ -95,12 +87,6 @@ const HeaderContents = styled.div`
   padding-left: 1rem;
 `;
 
-// 하단 그래디언트 테두리
-const GradientBorder = styled.div`
-  height: 3px;
-  background: linear-gradient(to right, #868e96, #495057);
-`;
-
 const StyledBtn = styled.button`
   display: block;
   position: relative;
@@ -111,7 +97,7 @@ const StyledBtn = styled.button`
   font-weight: 600;
   text-align: center;
   line-height: 50px;
-  color: #fff;
+  color: black;
   border-radius: 5px;
   transition: all 0.2s;
 `;
@@ -121,7 +107,7 @@ const TopSpan = styled.span`
   left: 0;
   width: 120px;
   height: 50px;
-  background: darkblue;
+  background: #adff2f;
   z-index: 10;
   transition: all 0.2s;
   border-radius: 5px;
@@ -135,7 +121,7 @@ const BottomSpan = styled.span`
   left: 0;
   width: 120px;
   height: 50px;
-  color: #000;
+  color: white;
   z-index: 5;
   border-radius: 5px;
 `;

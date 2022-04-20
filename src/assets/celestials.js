@@ -3,9 +3,9 @@ import React from "react";
 const celestialJson = [
   {
     index: 0,
-    zPos: 100,
-    cameraZ: 200,
-    sizeFactor: 160,
+    cameraX: 150,
+    sizeFactor: 5,
+    orbitFactor: 110,
     name: "Mercury",
     image: require("./img/8k_mercury.jpg"),
     mass: 0.33,
@@ -29,10 +29,9 @@ const celestialJson = [
   },
   {
     index: 1,
-    zPos: 250,
-    cameraZ: 550,
-    sizeFactor: 160,
-
+    cameraX: 372,
+    sizeFactor: 7,
+    orbitFactor: 120,
     name: "Venus",
     image: require("./img/8k_venus_surface.jpg"),
     mass: 4.87,
@@ -56,10 +55,9 @@ const celestialJson = [
   },
   {
     index: 2,
-    zPos: 500,
-    cameraZ: 800,
-    sizeFactor: 160,
-
+    cameraX: 388,
+    sizeFactor: 7,
+    orbitFactor: 150,
     name: "Earth",
     image: require("./img/8k_earth_daymap.jpg"),
     mass: 5.97,
@@ -83,10 +81,9 @@ const celestialJson = [
   },
   {
     index: 3,
-    zPos: 800,
-    cameraZ: 970,
-    sizeFactor: 160,
-
+    cameraX: 590,
+    sizeFactor: 7,
+    orbitFactor: 140,
     name: "Mars",
     image: require("./img/8k_mars.jpg"),
     mass: 0.642,
@@ -110,10 +107,9 @@ const celestialJson = [
   },
   {
     index: 4,
-    zPos: 2000,
-    cameraZ: 5000,
-    sizeFactor: 160,
-
+    cameraX: 2017,
+    sizeFactor: 30,
+    orbitFactor: 80,
     name: "Jupiter",
     image: require("./img/8k_jupiter.jpg"),
     mass: 1898,
@@ -137,10 +133,9 @@ const celestialJson = [
   },
   {
     index: 5,
-    zPos: 4500,
-    cameraZ: 7000,
-    sizeFactor: 160,
-
+    cameraX: 3714,
+    sizeFactor: 30,
+    orbitFactor: 80,
     name: "Saturn",
     image: require("./img/8k_saturn.jpg"),
     mass: 568,
@@ -164,10 +159,9 @@ const celestialJson = [
   },
   {
     index: 6,
-    zPos: 7000,
-    cameraZ: 8100,
-    sizeFactor: 160,
-
+    cameraX: 7442,
+    sizeFactor: 30,
+    orbitFactor: 50,
     name: "Uranus",
     image: require("./img/2k_uranus.jpg"),
     mass: 86.8,
@@ -191,10 +185,9 @@ const celestialJson = [
   },
   {
     index: 7,
-    zPos: 8000,
-    cameraZ: 9000,
-    sizeFactor: 160,
-
+    cameraX: 11645,
+    sizeFactor: 30,
+    orbitFactor: 40,
     name: "Neptune",
     image: require("./img/2k_neptune.jpg"),
     mass: 102,
