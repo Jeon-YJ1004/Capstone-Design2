@@ -7,11 +7,11 @@ import SolarSystem from "./components/three.js/SolarSystem";
 function App() {
   return (
     <div className="App">
-      <Router>
+      <Router basename="/Capstone-Design2">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="slide" element={<CelSlide />}></Route>
-          <Route path="solarSystem" element={<SolarSystem />} />
+          <Route path="/slide" element={<CelSlide />}></Route>
+          <Route path="/solarSystem" element={<SolarSystem />} />
         </Routes>
       </Router>
     </div>

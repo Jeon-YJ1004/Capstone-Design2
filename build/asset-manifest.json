@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/Capstone-Design2/static/css/main.9e659c0f.css",
-    "main.js": "/Capstone-Design2/static/js/main.02232fab.js",
+    "main.js": "/Capstone-Design2/static/js/main.88a9c44a.js",
     "static/media/8k_mercury.jpg": "/Capstone-Design2/static/media/8k_mercury.b3bc4c353800a4a2a211.jpg",
     "static/media/8k_venus_surface.jpg": "/Capstone-Design2/static/media/8k_venus_surface.a2b5dff80d2f77d2afa0.jpg",
     "static/media/8k_earth_clouds.jpg": "/Capstone-Design2/static/media/8k_earth_clouds.08fcd80007fae8fc7170.jpg",
@@ -16,13 +16,13 @@
     "static/media/2k_uranus.jpg": "/Capstone-Design2/static/media/2k_uranus.428ad3f979bd783a27d1.jpg",
     "static/media/8k_saturn_ring_alpha.png": "/Capstone-Design2/static/media/8k_saturn_ring_alpha.89839372f2ea539a182f.png",
     "static/media/rocket-solid.svg": "/Capstone-Design2/static/media/rocket-solid.b417adc371a1534c973882ee80c6ced8.svg",
-    "static/media/xmark-solid.svg": "/Capstone-Design2/static/media/xmark-solid.6837248f26b4746bca22dce7c606b744.svg",
     "index.html": "/Capstone-Design2/index.html",
+    "static/media/xmark-solid.svg": "/Capstone-Design2/static/media/xmark-solid.6837248f26b4746bca22dce7c606b744.svg",
     "main.9e659c0f.css.map": "/Capstone-Design2/static/css/main.9e659c0f.css.map",
-    "main.02232fab.js.map": "/Capstone-Design2/static/js/main.02232fab.js.map"
+    "main.88a9c44a.js.map": "/Capstone-Design2/static/js/main.88a9c44a.js.map"
   },
   "entrypoints": [
     "static/css/main.9e659c0f.css",
-    "static/js/main.02232fab.js"
+    "static/js/main.88a9c44a.js"
   ]
 }
