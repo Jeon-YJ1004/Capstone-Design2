@@ -9,7 +9,7 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/Capstone-Design2" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="slide" element={<CelSlide />}></Route>
           <Route path="solarSystem" element={<SolarSystem />} />
         </Routes>
