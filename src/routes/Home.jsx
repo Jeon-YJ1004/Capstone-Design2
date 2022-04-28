@@ -19,7 +19,7 @@ function Home() {
   const [loading, setLoading] = useState(true);
 
   const onClick = () => {
-    window.location.replace(`/slide`);
+    window.location.replace(`/Capstone-Design2/slide`);
   };
 
   return (

@@ -9,12 +9,9 @@ function App() {
     <div className="App">
       <Router basename="/Capstone-Design2">
         <Routes>
-          <Route path="/Capstone-Design2/" element={<Home />} />
-          <Route path="/Capstone-Design2/slide" element={<CelSlide />}></Route>
-          <Route
-            path="/Capstone-Design2/solarSystem"
-            element={<SolarSystem />}
-          />
+          <Route path="/" element={<Home />} />
+          <Route path="/slide" element={<CelSlide />} />
+          <Route path="/solarSystem" element={<SolarSystem />} />
         </Routes>
       </Router>
     </div>

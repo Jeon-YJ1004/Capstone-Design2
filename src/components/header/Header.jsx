@@ -15,10 +15,10 @@ const Headers = (props) => {
   const onClickBtnRenderingPage = () => {
     console.log(renderingSolarSystem);
     if (renderingSolarSystem) {
-      window.location.replace(`/solarSystem`);
+      window.location.replace(`/Capstone-Design2/solarSystem`);
     } else {
       setRenderingSolarSystem(false);
-      window.location.replace(`/slide`);
+      window.location.replace(`/Capstone-Design2/slide`);
     }
   };
 
